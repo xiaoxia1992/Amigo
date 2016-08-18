@@ -10,6 +10,19 @@
             android:name=".AmigoService"
             android:process=":amigo" />
 
+        <activity
+            android:name=".ActivityStub$StandardStub"
+            android:launchMode="standard" />
+        <activity
+            android:name=".ActivityStub$SingleInstanceStub"
+            android:launchMode="singleInstance" />
+        <activity
+            android:name=".ActivityStub$SingleTaskStub"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".ActivityStub$SingleTopStub"
+            android:launchMode="singleTop" />
+
     </application>
 
 </manifest>

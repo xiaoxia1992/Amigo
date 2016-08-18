@@ -6,16 +6,15 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
-import android.util.Log;
+import android.os.Process;
 
 import static me.ele.amigo.utils.ProcessUtils.isMainProcessRunning;
 
 
 public class AmigoService extends Service {
 
-    private static final String TAG = AmigoService.class.getSimpleName();
     public static final int WHAT = 0;
-    public static final int DELAY = 200;
+    public static final int DELAY = 100;
 
     private Handler handler = new Handler() {
         @Override
@@ -25,11 +24,12 @@ public class AmigoService extends Service {
                 case WHAT:
                     Context context = AmigoService.this;
                     if (!isMainProcessRunning(context)) {
-                        Intent launchIntent = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
+                        Intent launchIntent = getPackageManager().getLaunchIntentForPackage(getPackageName());
                         launchIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                         context.startActivity(launchIntent);
-                        Log.e(TAG, "start launchIntent");
                         stopSelf();
+                        System.exit(0);
+                        Process.killProcess(Process.myPid());
                         return;
                     }
                     sendEmptyMessageDelayed(WHAT, DELAY);

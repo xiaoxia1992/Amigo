@@ -1,6 +1,7 @@
 package me.ele.amigo;
 
 import android.app.Application;
+import android.app.Instrumentation;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,6 +10,7 @@ import android.content.pm.Signature;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.os.Build;
+import android.os.Handler;
 import android.os.Process;
 import android.util.ArrayMap;
 import android.util.Log;
@@ -25,6 +27,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import me.ele.amigo.utils.ProcessUtils;
 
 import static me.ele.amigo.compat.ActivityThreadCompat.instance;
 import static me.ele.amigo.compat.NativeLibraryHelperCompat.copyNativeBinaries;
@@ -73,6 +77,10 @@ public class Amigo extends Application {
                 e.printStackTrace();
                 crash();
             }
+        }
+
+        if (!ProcessUtils.isMainProcess(this)) {
+            return;
         }
 
         directory = new File(getFilesDir(), "amigo");
@@ -131,6 +139,9 @@ public class Amigo extends Application {
                 addAssetPath.setAccessible(true);
                 addAssetPath.invoke(assetManager, demoAPk.getAbsolutePath());
                 setAPKResources(assetManager);
+
+                setApkInstrumentation();
+                setApkHandler();
             }
 
             Class acd = classLoader.loadClass("me.ele.amigo.acd");
@@ -145,6 +156,14 @@ public class Amigo extends Application {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
+    }
+
+    private void setApkInstrumentation() throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, InstantiationException {
+        Instrumentation oldInstrumentation = (Instrumentation) readField(instance(), "mInstrumentation", true);
+        Log.e(TAG, "oldInstrumentation--->" + oldInstrumentation);
+        AmigoInstrumentation instrumentation = new AmigoInstrumentation(oldInstrumentation);
+        writeField(instance(), "mInstrumentation", instrumentation, true);
+        Log.e(TAG, "setApkInstrumentation success classloader-->" + instrumentation.getClass().getClassLoader());
     }
 
     private void saveDexOptChecksum() throws IOException, NoSuchAlgorithmException {
@@ -166,6 +185,14 @@ public class Amigo extends Application {
                 crash();
             }
         }
+    }
+
+    private void setApkHandler() throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        Handler handler = (Handler) readField(instance(), "mH", true);
+        Object callback = readField(handler, "mCallback", true);
+        AmigoCallback value = new AmigoCallback(this, (Handler.Callback) callback);
+        writeField(handler, "mCallback", value);
+        Log.e(TAG, "hook handler success");
     }
 
     private void saveDexAndSoChecksum() throws IOException, NoSuchAlgorithmException {
