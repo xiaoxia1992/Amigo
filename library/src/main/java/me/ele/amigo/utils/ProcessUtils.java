@@ -11,6 +11,7 @@ public class ProcessUtils {
     private ProcessUtils() {
 
     }
+
     public static boolean isMainProcess(Context context) {
         return context.getPackageName().equals(getCurrentProcessName(context));
     }
@@ -28,6 +29,7 @@ public class ProcessUtils {
         }
         return null;
     }
+
     public static boolean isMainProcessRunning(Context context) {
         ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         List<RunningAppProcessInfo> processes = activityManager.getRunningAppProcesses();

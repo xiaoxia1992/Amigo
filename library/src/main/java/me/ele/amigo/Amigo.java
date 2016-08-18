@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import me.ele.amigo.utils.ComponentUtils;
 import me.ele.amigo.utils.ProcessUtils;
 
 import static me.ele.amigo.compat.ActivityThreadCompat.instance;
@@ -125,6 +126,7 @@ public class Amigo extends Application {
                 AmigoClassLoader amigoClassLoader = new AmigoClassLoader(demoAPk.getAbsolutePath(), getRootClassLoader());
                 classLoader = amigoClassLoader;
                 setAPKClassLoader(amigoClassLoader);
+                Thread.currentThread().setContextClassLoader(amigoClassLoader);
 
                 setDexElements(amigoClassLoader);
                 if (isFirstRun) {
@@ -142,6 +144,8 @@ public class Amigo extends Application {
 
                 setApkInstrumentation();
                 setApkHandler();
+
+                dynamicRegisterReceivers();
             }
 
             Class acd = classLoader.loadClass("me.ele.amigo.acd");
@@ -156,6 +160,10 @@ public class Amigo extends Application {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
+    }
+
+    private void dynamicRegisterReceivers() {
+        ComponentUtils.registerNewReceivers(this);
     }
 
     private void setApkInstrumentation() throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, InstantiationException {

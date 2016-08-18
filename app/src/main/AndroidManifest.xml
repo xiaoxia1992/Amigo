@@ -22,8 +22,18 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".SecondActivity" android:launchMode="singleTop"/>
-        <activity android:name=".ThirdActivity" android:launchMode="singleTask"/>
+        <activity
+            android:name=".SecondActivity"
+            android:launchMode="singleTop" />
+        <activity
+            android:name=".ThirdActivity"
+            android:launchMode="singleTask" />
+
+        <receiver android:name=".DemoReceiver">
+            <intent-filter>
+                <action android:name="me.ele.test" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
