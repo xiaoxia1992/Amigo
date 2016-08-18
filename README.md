@@ -12,7 +12,7 @@ so...
 ### usage
 
 ```groovy
- classpath 'me.ele:amigo:0.1.6'
+ classpath 'me.ele:amigo:0.1.7'
  ...
 
  apply plugin: 'me.ele.amigo'
@@ -43,3 +43,9 @@ Amigo.work(context, apkFile);
 ```java
 Amigo.clear(context);
 ```
+
+## now Amigo support to load new Activity and BroadcastReceiver
+
+you can add activities & receivers whatever you like to add in your hotfix apk,
+waiting for **Service** & **ContentProvider**
+

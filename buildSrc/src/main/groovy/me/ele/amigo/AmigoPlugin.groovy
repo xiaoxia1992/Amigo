@@ -15,14 +15,14 @@ import java.util.jar.JarFile
 class AmigoPlugin implements Plugin<Project> {
 
     String content = ""
-//    static final VERSION = "0.1.6"
+    static final VERSION = "0.1.7"
 
     @Override
     void apply(Project project) {
 
-//        project.dependencies {
-//            compile "me.ele:amigo-lib:${VERSION}"
-//        }
+        project.dependencies {
+            compile "me.ele:amigo-lib:${VERSION}"
+        }
 
         project.plugins.withId('com.android.application') {
             project.android.applicationVariants.all { ApkVariant variant ->
@@ -131,14 +131,14 @@ class AmigoPlugin implements Plugin<Project> {
 
     void collectMultiDexInfo(Project project, ApkVariant variant) {
         if (!hasProguard(project, variant)) {
-//            String jarPath = "${project.buildDir}/intermediates/exploded-aar/me.ele/amigo-lib/${VERSION}/jars/classes.jar"
-//            JarFile jarFile = new JarFile(jarPath)
-//            Enumeration<JarEntry> enumeration = jarFile.entries()
-//            while (enumeration.hasMoreElements()) {
-//                JarEntry entry = enumeration.nextElement()
-//                content += "\n"
-//                content += entry.name
-//            }
+            String jarPath = "${project.buildDir}/intermediates/exploded-aar/me.ele/amigo-lib/${VERSION}/jars/classes.jar"
+            JarFile jarFile = new JarFile(jarPath)
+            Enumeration<JarEntry> enumeration = jarFile.entries()
+            while (enumeration.hasMoreElements()) {
+                JarEntry entry = enumeration.nextElement()
+                content += "\n"
+                content += entry.name
+            }
             content += "\n"
             content += "me/ele/amigo/acd.class"
             return
