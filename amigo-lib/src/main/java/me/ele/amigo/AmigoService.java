@@ -7,7 +7,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.Process;
-
+import android.util.Log;
 import static me.ele.amigo.utils.ProcessUtils.isMainProcessRunning;
 
 
